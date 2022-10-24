@@ -77,6 +77,14 @@ def deleteMateria(id):
     dictMateria = miControladorMateria.delete(id)
     return jsonify(dictMateria)
 
+#Relacion de materia con departamento
+
+@app.route("/materias/<string:id>/deparmentos/<string:id_departamento>",methods=['PUT'])
+def AsignarDepartamento(id, id_departamento):
+    respuesta = miControladorMateria.asignarDepartamento(id,id_departamento)
+    return jsonify(respuesta)
+
+
 # se realiza el main para el apartado de Departamento ---------------------------
 
 @app.route("/departamento",methods=['POST'])
