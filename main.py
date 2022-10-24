@@ -5,17 +5,10 @@ from flask_cors import CORS
 import json
 from waitress import serve
 
-#import pymongo
-#import certifi
-#ca = certifi.where()
-#cliente = pymongo.MongoClient("mongodb+srv://daniefrqm:Danielelrey1@cluster0.bxdr7uy.mongodb.net/?retryWrites=true&w=majority",  tlsCAFile=ca)
-#db = cliente.test
-#print(db)
-#baseDatos = cliente['db-registro-academico']
-#print(baseDatos.list_collection_names())
-
 from Controladores.ControladorEstudiante import ControladorEstudiante
 from Controladores.ControladorMateria import ControladorMateria
+from Controladores.ControlDepartamento import ControladorDepartamento
+from Controladores.ControladorInscripcion import ControladorInscripcion
 
 
 app = Flask(__name__)
@@ -25,6 +18,8 @@ cors = CORS(app)
 
 miControladorEstudiante = ControladorEstudiante()
 miControladorMateria = ControladorMateria()
+miControladorDepartamento = ControladorDepartamento()
+miControladorInscripcion= ControladorInscripcion()
 
 @app.route("/estudiantes",methods=['POST'])
 def crearEstudiante():
@@ -81,6 +76,65 @@ def putMateria(id):
 def deleteMateria(id):
     dictMateria = miControladorMateria.delete(id)
     return jsonify(dictMateria)
+
+# se realiza el main para el apartado de Departamento ---------------------------
+
+@app.route("/departamento",methods=['POST'])
+def crearDepartamento():
+    data = request.get_json()
+    dictUsuario = miControladorDepartamento.create(data)
+    return jsonify(dictUsuario)
+
+@app.route("/departamento/<string:id>",methods=['GET'])
+def getDepartamento(id):
+    dictDepartamento = miControladorDepartamento.mostrarDepartamento(id)
+    return jsonify((dictDepartamento))
+
+@app.route("/departamento",methods=['GET'])
+def getDepartamentos():
+    dictDepartamentos = miControladorDepartamento.mostrarDepartamentos()
+    return jsonify(dictDepartamentos)
+
+@app.route("/departamento/<string:id>",methods=['PUT'])
+def putDepartamento(id):
+    data = request.get_json()
+    dictDepartamento = miControladorDepartamento.update(id,data)
+    return jsonify(dictDepartamento)
+
+@app.route("/departamento/<string:id>",methods=['DELETE'])
+def deleteDepartamento(id):
+    dictDepartamento = miControladorDepartamento.delete(id)
+    return jsonify(dictDepartamento)
+
+# Se realiza la creacion y manipulacion de los datos de Inscripcion -----------------------
+
+@app.route("/inscripcion",methods=['POST'])
+def crearInscripcion():
+    data = request.get_json()
+    dictUsuario = miControladorInscripcion.create(data)
+    return jsonify(dictUsuario)
+
+@app.route("/inscripcion/<string:id>",methods=['GET'])
+def getInscripcion(id):
+    dictInscripcion = miControladorInscripcion.mostrarInscripcion(id)
+    return jsonify((dictInscripcion))
+
+@app.route("/inscripcion",methods=['GET'])
+def getInscripcions():
+    dictInscripcions = miControladorInscripcion.mostrarInscripcion()
+    return jsonify(dictInscripcions)
+
+@app.route("/inscripcion/<string:id>",methods=['PUT'])
+def putInscripcion(id):
+    data = request.get_json()
+    dictInscripcion = miControladorInscripcion.update(id,data)
+    return jsonify(dictInscripcion)
+
+@app.route("/inscripcion/<string:id>",methods=['DELETE'])
+def deleteInscripcion(id):
+    dictInscripcion = miControladorInscripcion.delete(id)
+    return jsonify(dictInscripcion)
+
 
 
 # Se ejecuta un mensaje donde se nota la ejecucion del servidor ----------------------
