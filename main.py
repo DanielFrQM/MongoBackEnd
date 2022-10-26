@@ -116,10 +116,10 @@ def deleteDepartamento(id):
 
 # Se realiza la creacion y manipulacion de los datos de Inscripcion -----------------------
 
-@app.route("/inscripcion",methods=['POST'])
-def crearInscripcion():
+@app.route("/inscripcion/estudiante/<string:id_estudiante>/materia/<string:id_materia>",methods=['POST'])
+def crearInscripcion(id_estudiante,id_materia):
     data = request.get_json()
-    dictUsuario = miControladorInscripcion.create(data)
+    dictUsuario = miControladorInscripcion.create(data,id_estudiante, id_materia)
     return jsonify(dictUsuario)
 
 @app.route("/inscripcion/<string:id>",methods=['GET'])
@@ -129,19 +129,34 @@ def getInscripcion(id):
 
 @app.route("/inscripcion",methods=['GET'])
 def getInscripcions():
-    dictInscripcions = miControladorInscripcion.mostrarInscripcion()
+    dictInscripcions = miControladorInscripcion.mostrarInscripcions()
     return jsonify(dictInscripcions)
 
-@app.route("/inscripcion/<string:id>",methods=['PUT'])
-def putInscripcion(id):
+@app.route("/inscripcion/<string:id>/estudiante/<string:id_estudiante>/materia/<string:id_materia>",methods=['PUT'])
+def putInscripcion(id,id_estudiante,id_materia):
     data = request.get_json()
-    dictInscripcion = miControladorInscripcion.update(id,data)
+    dictInscripcion = miControladorInscripcion.update(id,data,id_estudiante,id_materia)
     return jsonify(dictInscripcion)
 
 @app.route("/inscripcion/<string:id>",methods=['DELETE'])
 def deleteInscripcion(id):
     dictInscripcion = miControladorInscripcion.delete(id)
     return jsonify(dictInscripcion)
+
+@app.route("/inscripcion/materia/<string:id>",methods=['GET'])
+def inscritoMateria(id_materia):
+    respuesta = miControladorInscripcion.listarInscritos(id_materia)
+    return jsonify(respuesta)
+
+@app.route("/inscripcion/notas_mayores",methods=['GET'])
+def notaMayores():
+    respuesta = miControladorInscripcion.notaMasAltaPorMateria()
+    return jsonify(respuesta)
+
+@app.route("/inscripcion/promedio/materia/<string:id_materia>",methods=['GET'])
+def promedioMateria(id_materia):
+    respuesta = miControladorInscripcion.promedioMaterias(id_materia)
+    return jsonify(respuesta)
 
 
 
